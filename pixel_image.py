@@ -130,7 +130,7 @@ def push(macro_pixel,micro_im,ratio=0.25):
 			pixels[w,h]=(round(max(min(pixels[w,h][0]+d0*ratio,255),0)),round(max(min(pixels[w,h][1]+d1*ratio,255),0)),round(max(min(pixels[w,h][2]+d2*ratio,255),0)))
 	return micro_im
 
-def create_pixel_image(path_macro_image,path_micro_images,macro_size=60,micro_size=40,cheat=False,load=True,temp=5,ratio=0.25):
+def create_pixel_image(path_macro_image,path_micro_images,macro_size=60,micro_size=40,cheat=True,load=False,temp=5,ratio=0.25):
 	macro_im=open_image(path_macro_image,rotate=not load)
 	macro_im=resize_to_height_ref(macro_im,macro_size)
 	macro_w,macro_h=macro_im.size
@@ -155,12 +155,10 @@ def create_pixel_image(path_macro_image,path_micro_images,macro_size=60,micro_si
 
 
 
-im=create_pixel_image(image_path+'main11.jpg',image_path,macro_size=90,micro_size=40,cheat=True,ratio=0.35,load=True,temp=8)
+im=create_pixel_image(image_path+'main11.jpg',image_path)
 save_image(im,'/Users/Giaco/Pictures/Meret_Giaco/11.3.jpg')
 im.show()
 
-# original=open_image(image_path+'DSC_0947.jpg')
-# original.show()
 
 
 
