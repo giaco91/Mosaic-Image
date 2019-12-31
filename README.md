@@ -1,5 +1,5 @@
 # Mosaik Image
-A code that fits the pixels of a given image to small images of a given image collection. You find an example image at `mosaik_images/test.jpeg`.
+A code that fits the pixels of a given (macro)image to small images of a given image collection. You find an example image at `mosaik_images/test.jpeg`.
 
 ## How to generate your own image
 Use `mosaik_main.py` and hand over parser arguments. By default it uses the macro image at `makro_images/main5.jpg` and the micro images
