@@ -6,7 +6,7 @@ Use `mosaik_main.py` and hand over parser arguments. By default it uses the macr
 from the folder `preprocessed_size=45` and generates the mosaik image that you find at `mosaik_images/test.jpeg`. 
 <br/>
 You have a lot of freedom to design your very own mosaik image! In the following I explain the paramerters you can set in `mosaik_main.py` in more detail.
-**--path_to_macro_img**, the path to the macro image
+**--path_to_macro_img**, the path to the macro image\
 <br/>
 **--path_to_image_folder'**, the path to the folder where you store all the **unprocessed** micro images you want to use
 <br/>
