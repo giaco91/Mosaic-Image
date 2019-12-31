@@ -5,9 +5,9 @@ A code that fits the pixels of a given image to small images of a given image co
 Use `mosaik_main.py` and hand over parser arguments. By default it uses the macro image at `makro_images/main5.jpg` and the micro images
 from the folder `preprocessed_size=45` and generates the mosaik image that you find at `mosaik_images/test.jpeg`. 
 <br/>
-You have a lot of freedom to design your very own mosaik image! In the following I explain the paramerters you can set in `mosaik_main.py` in more detail.
+You have a lot of freedom to design your very own mosaik image! In the following I explain the paramerters you can set in `mosaik_main.py` in more detail.\
 **--path_to_macro_img**, the path to the macro image\
-<br/>
+
 **--path_to_image_folder'**, the path to the folder where you store all the **unprocessed** micro images you want to use
 <br/>
 **--load_preprocessed_img'**, if True it assumes that you have already preprocessed the micro images at the appropriate size and it loads it from that folder. In that case you don't need care about the argument `--path_to_image_folder`.
