@@ -21,4 +21,4 @@ You have a lot of freedom to design your very own mosaik image! In the following
 
 The image scratcher `google_images_download.py` is lend from here:
 https://github.com/hardikvasa/google-images-download
-and only very slightly addapted. So If there are issues with that, please click on that link for help
+and only very slightly addapted. So If there are issues with that, please click on that link for help.
