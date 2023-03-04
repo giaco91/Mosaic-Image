@@ -99,25 +99,26 @@ def get_preprocessed_micro_images(path_micro_images,size,load=False):
 		if not os.path.exists(preprocessed_image_path):
 			os.mkdir(preprocessed_image_path)
 		for im_name in os.listdir(path_micro_images):
-			if im_name[0]!='.' and im_name.endswith(".jpg"):
+			if im_name[0]!='.' and (im_name.endswith(".jpg") or im_name.endswith(".png")):
 				im=open_image(path_micro_images+im_name,rotate=True)
 				im=square_crop(im)
 				im=resize_to_height_ref(im,size).convert('RGB')
 				preprocessed_micro_images.append(im)
 				print('save_image....')
+				im_name = im_name.split('.')[0]+'.png'
 				save_image(im,preprocessed_image_path+im_name)
 	else:
 		if not os.path.exists(preprocessed_image_path):
 			raise ValueError('can not load processed images because directory does not exist')
 		else:
 			for im_name in os.listdir(preprocessed_image_path):
-				if im_name.endswith(".jpg"):
+				if im_name.endswith(".jpg") or im_name.endswith(".png"):
 					im=open_image(preprocessed_image_path+im_name).copy()
 					preprocessed_micro_images.append(im.convert('RGB'))
 	return preprocessed_micro_images
 
 def get_assignment(macro_im,averages,temp=5):
-	#temp>0 allowes inoptimal assigments for adding a sampling feature
+	#temp>0 allows noisy assigments to increase diversity
 	temp=int(np.ceil(temp))
 	W,H=macro_im.size
 	im_matrix=-np.ones((W,H))
@@ -129,11 +130,7 @@ def get_assignment(macro_im,averages,temp=5):
 			p=get_pixel(macro_im,w,h)
 			i=0
 			for a in averages:
-				#d=(a[0]-p[0])**2+(a[1]-p[1])**2+(a[2]-p[2])**2
 				d[i]=(a[0]-p[0])**2+(a[1]-p[1])**2+(a[2]-p[2])**2
-				# if d<closest:
-				# 	closest=d
-				# 	im_matrix[w,h]=i
 				i+=1
 			sorted_idx=np.argsort(d)[:temp]#void of perfect fit helps also for diversity!
 			if temp>=9:
@@ -164,20 +161,24 @@ def push(macro_pixel,micro_im,ratio=0.25):
 			pixels[w,h]=(round(max(min(pixels[w,h][0]+d0*ratio,255),0)),round(max(min(pixels[w,h][1]+d1*ratio,255),0)),round(max(min(pixels[w,h][2]+d2*ratio,255),0)))
 	return micro_im
 
-def create_pixel_image(path_macro_image,path_micro_images,macro_size=[100,100],micro_size=40,load=False,temp=5,ratio=0.25):
-	macro_im=open_image(path_macro_image,rotate=True)
-	macro_im=crop_to_ratio(macro_im,macro_size[0],macro_size[1])
-	macro_im=resize(macro_im,macro_size[0],macro_size[1])
+def create_pixel_image(path_macro_image,path_micro_images,macro_size=[100,100],micro_size=40,load=False,temp=5,ratio=0.25,
+												final_blending = 0.2):
+	macro_im_orig=open_image(path_macro_image,rotate=True)
+	macro_im_ratio=crop_to_ratio(macro_im_orig,macro_size[0],macro_size[1])
+	macro_im=resize(macro_im_ratio,macro_size[0],macro_size[1])
 	macro_w,macro_h=macro_im.size
+	
 	print('getting prepocessed micro images...')
 	micro_images=get_preprocessed_micro_images(path_micro_images,micro_size,load=load)
 	averages=[]
 	for micro_im in micro_images:
 		averages.append(calc_average_rgb(micro_im))
+	
 	print('calculating the assignents...')
 	assignment=get_assignment(macro_im,averages,temp=temp)
 	pixel_image=create_image(micro_size*macro_w,micro_size*macro_h)
 	pixel=pixel_image.load()
+
 	print('constructing the mosaik image...')
 	for w in range(macro_w):
 		p=int(w/macro_w*100)
@@ -193,6 +194,11 @@ def create_pixel_image(path_macro_image,path_micro_images,macro_size=[100,100],m
 			for i in range(micro_size):
 				for j in range(micro_size):
 					pixel[micro_size*w+i,micro_size*h+j]=micro_pixels[i,j]
+
+	w,h = pixel_image.size
+	macro_im_full_size = resize(macro_im_ratio,w,h)
+	pixel_image = Image.blend(pixel_image, macro_im_full_size, final_blending)
+
 	return pixel_image
 
 
